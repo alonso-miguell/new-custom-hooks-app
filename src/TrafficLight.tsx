@@ -98,6 +98,9 @@ export const TrafficLight = () => {
                 <h1 className="text-white text-3xl font-thin"> Semaforo con useEffect</h1>
                 <h2 className="text-white text-xl"> {`Counter: ${counter}`}</h2>
 
+                    <div className="bg-blue-500 h-2 rounded-full transition-all duration-1000 ease-linear" style={ {width: `${ (counter/5) *100}%` }}>
+                    </div>
+
 
                 <div className={`w-32 h-32 ${color === 'red' ? colors['red'] : colors['gray']}  rounded-full`}></div>
                 <div
