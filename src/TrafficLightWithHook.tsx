@@ -1,4 +1,4 @@
-import {useTrafficLight} from "./hooks/useTrafficLight.tsx";
+import {useTrafficLight} from "./hooks/basicHooks/useTrafficLight.tsx";
 
 export const TrafficLightWithHook = () => {
 

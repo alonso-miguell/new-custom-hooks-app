@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getPokemon, type Pokemon} from "../utils/pokeApi.tsx";
+import {getPokemon, type Pokemon} from "../../utils/pokeApi.tsx";
 
 export const usePokemon= ( id: number ) => {
 

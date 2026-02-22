@@ -1,6 +1,6 @@
-import {useCounter} from "./hooks/useCounter.tsx";
+import {useCounter} from "./hooks/basicHooks/useCounter.tsx";
 import {type Pokemon} from "./utils/pokeApi.tsx";
-import {usePokemon} from "./hooks/usePokemon.tsx";
+import {usePokemon} from "./hooks/basicHooks/usePokemon.tsx";
 
 export const PokemonPage = () => {
 
