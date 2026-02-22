@@ -1,12 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-// import {NewReactApp} from "./NewReactApp.tsx";
-import {TrafficLight} from "./TrafficLight.tsx";
+import {PokemonPage} from "./PokemonPage.tsx";
+import {FocusScreen} from "./hooks/useRef/FocusScreen.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {/*<NewReactApp />*/}
-      <TrafficLight></TrafficLight>
+      {/*<PokemonPage></PokemonPage>*/}
+      <FocusScreen></FocusScreen>
   </StrictMode>,
 )
