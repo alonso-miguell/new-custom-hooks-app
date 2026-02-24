@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
-import { Plus, Trash2, Check } from 'lucide-react';
+import {Plus, Trash2, Check} from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {Checkbox} from '@/components/ui/checkbox';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 
 interface Todo {
     id: number;
@@ -19,21 +19,37 @@ export const TasksApp = () => {
 
     const addTodo = () => {
         console.log('Agregar tarea', inputValue);
+        setTodos([{id: Math.random(), text: inputValue, completed: false}, ...todos]);
 
     };
 
     const toggleTodo = (id: number) => {
         console.log('Cambiar de true a false', id);
 
+        const editedTodos = todos.map((task) => {
+            if (task.id === id) {
+                task.completed = !task.completed;
+            }
+
+            return task;
+        });
+
+        setTodos(editedTodos);
+
     };
 
     const deleteTodo = (id: number) => {
         console.log('Eliminar tarea', id);
+        const editedTodos = todos.filter((task) => task.id !== id);
 
+        setTodos(editedTodos);
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         console.log('Presiono enter');
+        if (e.key === 'Enter') {
+            addTodo();
+        }
 
     };
 
@@ -66,7 +82,7 @@ export const TasksApp = () => {
                                 onClick={addTodo}
                                 className="bg-slate-800 hover:bg-slate-700 text-white px-4"
                             >
-                                <Plus className="w-4 h-4" />
+                                <Plus className="w-4 h-4"/>
                             </Button>
                         </div>
                     </CardContent>
@@ -89,7 +105,7 @@ export const TasksApp = () => {
                             <div className="w-full bg-slate-200 rounded-full h-2">
                                 <div
                                     className="bg-gradient-to-r from-green-400 to-green-500 h-2 rounded-full transition-all duration-300 ease-out"
-                                    style={{ width: `${(completedCount / totalCount) * 100}%` }}
+                                    style={{width: `${(completedCount / totalCount) * 100}%`}}
                                 />
                             </div>
                         </CardContent>
@@ -105,8 +121,9 @@ export const TasksApp = () => {
                     <CardContent>
                         {todos.length === 0 ? (
                             <div className="text-center py-12">
-                                <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
-                                    <Check className="w-8 h-8 text-slate-400" />
+                                <div
+                                    className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
+                                    <Check className="w-8 h-8 text-slate-400"/>
                                 </div>
                                 <p className="text-slate-500 text-lg mb-2">No hay tareas</p>
                                 <p className="text-slate-400 text-sm">
@@ -144,7 +161,7 @@ export const TasksApp = () => {
                                             onClick={() => deleteTodo(todo.id)}
                                             className="text-slate-400 hover:text-red-500 hover:bg-red-50 h-8 w-8 p-0"
                                         >
-                                            <Trash2 className="w-4 h-4" />
+                                            <Trash2 className="w-4 h-4"/>
                                         </Button>
                                     </div>
                                 ))}
