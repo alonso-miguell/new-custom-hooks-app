@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useReducer} from 'react';
 
 import {Plus, Trash2, Check} from 'lucide-react';
 
@@ -6,40 +6,37 @@ import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Checkbox} from '@/components/ui/checkbox';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import type {Todo} from "@/hooks/useReducer/TaskReducer.tsx";
+import {initialState, taskReducer, type Todo} from "@/hooks/useReducer/TaskReducer.tsx";
 
-
-
-export const TasksApp = () => {
-    const [todos, setTodos] = useState<Todo[]>([]);
-    const [inputValue, setInputValue] = useState('');
+export const TasksAppWithReducer = () => {
+    // const [todos, setTodos] = useState<Todo[]>([]);
+    // const [inputValue, setInputValue] = useState('');
+    const [state, dispatch] = useReducer(taskReducer, initialState);
+    // const inputValue=state.inputValue;
+    // const todos= state.todos;
 
     const addTodo = () => {
-        console.log('Agregar tarea', inputValue);
-        setTodos([{id: Math.random(), text: inputValue, completed: false}, ...todos]);
-
+        if(state.inputValue.length ===0) return;
+        const newTodo: Todo={id: Math.random(), text: state.inputValue, completed: false};
+        dispatch({ type:'TASK_ADD', payload: newTodo });
     };
 
     const toggleTodo = (id: number) => {
-        console.log('Cambiar de true a false', id);
 
-        const editedTodos = todos.map((task) => {
-            if (task.id === id) {
-                task.completed = !task.completed;
-            }
+        dispatch({ type:'TASK_TOGGLE', payload: id });
 
-            return task;
-        });
 
-        setTodos(editedTodos);
+        // setTodos(editedTodos);
 
     };
 
     const deleteTodo = (id: number) => {
-        console.log('Eliminar tarea', id);
-        const editedTodos = todos.filter((task) => task.id !== id);
+        // console.log('Eliminar tarea', id);
 
-        setTodos(editedTodos);
+        // setTodos(editedTodos);
+
+        dispatch({ type:'TASK_DELETE', payload: id });
+
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -50,8 +47,13 @@ export const TasksApp = () => {
 
     };
 
-    const completedCount = todos.filter((todo) => todo.completed).length;
-    const totalCount = todos.length;
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log( e.target.value );
+        dispatch({ type: 'TASK_EDIT', payload: e.target.value });
+    }
+
+    const completedCount = state.completed;
+    const totalCount = state.length;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4">
@@ -70,8 +72,8 @@ export const TasksApp = () => {
                         <div className="flex gap-2">
                             <Input
                                 placeholder="Añade una nueva tarea..."
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
+                                value={state.inputValue}
+                                onChange={handleOnChange}
                                 onKeyDown={handleKeyPress}
                                 className="flex-1 border-slate-200 focus:border-slate-400 focus:ring-slate-400"
                             />
@@ -116,7 +118,7 @@ export const TasksApp = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        {todos.length === 0 ? (
+                        {state.todos.length === 0 ? (
                             <div className="text-center py-12">
                                 <div
                                     className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
@@ -129,7 +131,7 @@ export const TasksApp = () => {
                             </div>
                         ) : (
                             <div className="space-y-2">
-                                {todos.map((todo) => (
+                                {state.todos.map((todo) => (
                                     <div
                                         key={todo.id}
                                         className={`flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 ${
