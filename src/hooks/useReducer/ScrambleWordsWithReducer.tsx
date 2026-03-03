@@ -2,103 +2,51 @@
 // Es necesario componentes de Shadcn/ui
 // https://ui.shadcn.com/docs/installation/vite
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { SkipForward, Play } from 'lucide-react';
+import {getInitialState, ScrambleWordsReducer} from "@/hooks/useReducer/reducers/ScrambleWordsReducer.ts";
 
-const GAME_WORDS = [
-    'REACT',
-    'JAVASCRIPT',
-    'TYPESCRIPT',
-    'HTML',
-    'ANGULAR',
-    // 'SOLID',
-    // 'NODE',
-    // 'VUEJS',
-    // 'SVELTE',
-    // 'EXPRESS',
-    // 'MONGODB',
-    // 'POSTGRES',
-    // 'DOCKER',
-    // 'KUBERNETES',
-    // 'WEBPACK',
-    // 'VITE',
-    // 'TAILWIND',
-];
 
-// Esta función mezcla el arreglo para que siempre sea aleatorio
-const shuffleArray = (array: string[]) => {
-    return array.sort(() => Math.random() - 0.5);
-};
 
-// Esta función mezcla las letras de la palabra
-const scrambleWord = (word: string = '') => {
-    return word
-        .split('')
-        .sort(() => Math.random() - 0.5)
-        .join('');
-};
 
-export const ScrambleWords = () => {
-    const [words, setWords] = useState(() =>shuffleArray(GAME_WORDS));
-
-    const [currentWord, setCurrentWord] = useState(words[0]);
-    const [scrambledWord, setScrambledWord] = useState(scrambleWord(currentWord));
-    const [guess, setGuess] = useState('');
-    const [points, setPoints] = useState(0);
-    const [errorCounter, setErrorCounter] = useState(0);
-    const [maxAllowErrors, setMaxAllowErrors] = useState(3);
-
-    const [skipCounter, setSkipCounter] = useState(0);
-    const [maxSkips, setMaxSkips] = useState(3);
-
-    const [isGameOver, setIsGameOver] = useState(false);
+export const ScrambleWordsWithReducer = () => {
+    const [ state, dispatch ] = useReducer(  ScrambleWordsReducer, getInitialState() );
+    const {
+        words,
+        wordsLength,
+        scrambledWord,
+        currentWord,
+        guess,
+        points,
+        errors: errorCounter,
+        maxErrors: maxAllowErrors,
+        skips: skipCounter,
+        maxSkips,
+        isGameOver,
+    } = state;
 
     const handleGuessSubmit = (e: React.FormEvent) => {
         // Previene el refresh de la página
         e.preventDefault();
-        // Implementar lógica de juego
-        console.log('Intento de adivinanza:', guess, currentWord);
-        if(guess === currentWord) {
-            setPoints(points+1);
-            const updatedWords= words.slice(1);
-            setWords(shuffleArray(updatedWords));
-            setCurrentWord(updatedWords[0]);
-            setScrambledWord(scrambleWord(updatedWords[0]));
-        }
-        else setErrorCounter(errorCounter+1);
 
-        if (errorCounter+1===maxAllowErrors)
-            setIsGameOver( true );
-
-        setGuess('');
+        dispatch({ type: 'SUBMIT_GUESS' });
     };
 
+    const handleUpdateGuess= (e:   React.ChangeEvent<HTMLInputElement>)=>{
+        const upperCaseInput: string=e.target.value.toUpperCase().trim();
+        dispatch({ type: 'UPDATE_GUESS', payload: upperCaseInput });
+
+    }
+
     const handleSkip = () => {
-        console.log('Palabra saltada');
-        setSkipCounter(skipCounter +1);
-        const updatedWords= words.slice(1);
-        setWords(shuffleArray(updatedWords));
-        setCurrentWord(updatedWords[0]);
-        setScrambledWord(scrambleWord(updatedWords[0]));
-
-
+        dispatch({ type: 'SKIP_WORD'});
     };
 
     const handlePlayAgain = () => {
-        const shuffledWords=shuffleArray(GAME_WORDS);
-        setWords(shuffledWords);
-        console.log('Jugar de nuevo');
-        setPoints(0);
-        setCurrentWord(() => shuffledWords[0]);
-        setScrambledWord(() => scrambleWord(shuffledWords[0]));
-        setErrorCounter(0);
-        setIsGameOver( false);
-        setGuess('');
-        setSkipCounter(0);
-
+        dispatch({ type: 'NEW_GAME', payload: getInitialState()});
     };
 
     //! Si ya no hay palabras para jugar, se muestra el mensaje de fin de juego
@@ -179,9 +127,7 @@ export const ScrambleWords = () => {
                                         id="guess"
                                         type="text"
                                         value={guess}
-                                        onChange={(e) =>
-                                            setGuess(e.target.value.toUpperCase().trim())
-                                        }
+                                        onChange={ handleUpdateGuess}
                                         placeholder="Ingresa tu palabra..."
                                         className="text-center text-lg font-semibold h-12 border-2 border-indigo-200 focus:border-indigo-500 transition-colors"
                                         maxLength={scrambledWord.length}
@@ -202,7 +148,7 @@ export const ScrambleWords = () => {
                         <div className="grid grid-cols-2 gap-4 mb-6">
                             <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-4 text-center border border-green-200">
                                 <div className="text-2xl font-bold text-green-600">
-                                    {points} / {GAME_WORDS.length}
+                                    {points} / {wordsLength}
                                 </div>
                                 <div className="text-sm text-green-700 font-medium">Puntos</div>
                             </div>
