@@ -4,7 +4,7 @@ import {usePokemon} from "./hooks/basicHooks/usePokemon.tsx";
 
 export const PokemonPage = () => {
 
-    const{ counter, decreaseCounter, increaseCounter } = useCounter();
+    const{ counter, decreaseCounter, increaseCounter } = useCounter(1);
     const pokemon:Pokemon | undefined=usePokemon(counter);
 
     return (

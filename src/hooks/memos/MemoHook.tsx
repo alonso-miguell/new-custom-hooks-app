@@ -26,7 +26,7 @@ export const MemoHook = () => {
      * declared INSIDE the component, so the component
      * re-renders even if we used memo.
      *
-     * The way for "memorizing" fgunctions is to use:
+     * The way for "memorizing" functions is to use:
      * useCallback(
      *      the whole function boy here
      *      ), [dependencies];
