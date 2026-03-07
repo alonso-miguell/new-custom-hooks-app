@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import {MemoCounter} from "@/hooks/memos/MemoCounter.tsx";
+import {HomePage} from "@/hooks/useContext/MySPA.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-      <MemoCounter></MemoCounter>
+      <HomePage></HomePage>
   </StrictMode>,
 )
