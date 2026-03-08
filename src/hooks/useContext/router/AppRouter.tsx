@@ -1,4 +1,3 @@
-import React from "react";
 import {createBrowserRouter, Navigate} from "react-router";
 import {AboutPage} from "@/hooks/useContext/pages/About.tsx";
 import {LoginPage} from "@/hooks/useContext/pages/Login.tsx";
