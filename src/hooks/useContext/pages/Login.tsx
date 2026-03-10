@@ -1,9 +1,8 @@
-import {Link} from "lucide-react";
 import {Button} from "@/components/ui/button.tsx";
 import {Input} from "@/components/ui/input.tsx";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {UserContext} from "@/hooks/useContext/UserContextProvider.tsx";
-import {useNavigate} from "react-router";
+import {Link, useNavigate} from "react-router";
 
 export const LoginPage = () => {
 
@@ -32,6 +31,12 @@ export const LoginPage = () => {
         }
 
     }
+
+    useEffect(() => {
+        if(localStorage.getItem('userId')){
+            navigator("/profile");
+        }
+    });
 
     return (
         <div className="flex flex-col items-center min-h-screen">

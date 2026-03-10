@@ -2,6 +2,30 @@ import {type User, users} from "@/hooks/useContext/data/user.mock.data.tsx";
 import {createContext, type PropsWithChildren, useState} from "react";
 
 
+/**
+ * Context is used to avoid Prop drilling
+ *
+ * Prop drilling is when you pass props through multiple intermediate components
+ * that don't need them, just to get data to a deeply nested component.
+ *
+ * // Data needs to reach <Avatar>, but passes through components that don't use it
+ * <App user={user}>               // has user
+ *   <Layout user={user}>          // doesn't need user, just passes it
+ *     <Navbar user={user}>        // doesn't need user, just passes it
+ *       <Avatar user={user} />    // finally uses it
+ *     </Navbar>
+ *   </Layout>
+ * </App>
+ *
+ * Layout and Navbar don't care about user — they're just middlemen.
+ *
+ * Solutions:
+ *
+ * Context → most common fix
+ * State managers like Redux, Zustand
+ * Component composition (passing components as children instead of data)
+ */
+
 // Define context Props
 interface UserContextProps {
     user: User | null;
@@ -13,6 +37,8 @@ interface UserContextProps {
 /**
  * This is the actual context that will be used for the components and where
  * the provider will push the values according to the props
+ *
+ * The provider is just the SOURCE for the context
  */
 export const UserContext = createContext<UserContextProps>({} as UserContextProps);
 
@@ -42,6 +68,7 @@ export const UserContextProvider = ({children}: PropsWithChildren) => {
         if (loggedUser) {
             setUser(loggedUser);
             setIsAuthenticated(true);
+            localStorage.setItem('user', JSON.stringify(loggedUser));
             return true;
         }
 
@@ -51,6 +78,8 @@ export const UserContextProvider = ({children}: PropsWithChildren) => {
     }
 
     const handleLogout = () => {
+        localStorage.removeItem('user');
+
         setUser(null);
         setIsAuthenticated(false);
     }

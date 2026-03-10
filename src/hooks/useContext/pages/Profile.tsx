@@ -1,12 +1,15 @@
 import {Button} from "@/components/ui/button.tsx";
 import {useContext} from "react";
 import {UserContext} from "@/hooks/useContext/UserContextProvider.tsx";
+import {Link} from "react-router";
 
 export const ProfilePage = () => {
 
-    const {isAuthenticated, user} = useContext(UserContext);
+    const {handleLogout, user} = useContext(UserContext);
 
-    const handleLogout = () => {
+    const handleLogoutClick = () => {
+        handleLogout();
+        localStorage.removeItem("userId");
         console.log("Logout");
     }
 
@@ -19,10 +22,17 @@ export const ProfilePage = () => {
         {JSON.stringify(user, null, 2)}
       </pre>
 
-            <Button variant="destructive" onClick={handleLogout}
+            <div className="flex flex-col gap-2">
+                <Link to="/about" className="hover:text-blue-500 underline text-2xl">
+                    About
+                </Link>
+            </div>
+            <Button variant="destructive" className="bg-red-800 hover:bg-slate-700 text-white px-4" onClick={handleLogoutClick}
             >
                 Salir
             </Button>
+
+
         </div>
     );
 };
